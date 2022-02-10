@@ -1,5 +1,6 @@
 # Sorth
-Sorth is an interpreted, stack based, typeless language implemented from a [stackoverflow answer](https://stackoverflow.com/questions/6887471/how-would-i-go-about-writing-an-interpreter-in-c), alongside some extra features
+Sorth is an interpreted, stack based, typeless language implemented from a [stackoverflow answer](https://stackoverflow.com/questions/6887471/how-would-i-go-about-writing-an-interpreter-in-c), alongside some extra features  
+Current status: `development in progress`
 
 
 ## Syntax
