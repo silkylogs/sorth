@@ -6,3 +6,6 @@ set sourceFiles= sorth.c stack.c filehandler.c
 
 @echo on
 %compiler% -o %output% %sourcefiles%
+
+@echo off
+echo _______________________________________________________________________
