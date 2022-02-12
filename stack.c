@@ -61,7 +61,7 @@ s_atom* delete_top(s_atom **current){
  * returns its value, moves the input pointer to the next
  * element in the stack, and deletes the topmost atom
 */
-int pop(s_atom **h_atom){
+long pop(s_atom **h_atom){
 	if(*h_atom == NULL){
 		printf("stack.c: pop() attempted to pop null pointer. ");
 		printf("Perhaps there is nothing in the stack to pop?\n");
@@ -72,7 +72,7 @@ int pop(s_atom **h_atom){
 	if(new_atom == NULL){
 		printf("Additional error from derived function pop(): ");
 		printf("Unable to allocate memory\n");
-		return (s_atom*)(NULL);
+		return 0xdeadbeef;
 	}
 	*h_atom = new_atom;
 

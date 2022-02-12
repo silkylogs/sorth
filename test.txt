@@ -1,5 +1,10 @@
-push 2
-push 2
+push 35
+push 70
+pop
+push 50
+push -1
 add
+add
+
 nonstandard_cmd
 print

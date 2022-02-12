@@ -26,7 +26,7 @@ s_atom* insert(s_atom *current, int value);
 s_atom* delete_top(s_atom **current);
 
 /* -- Derived functions -- */
-int pop(s_atom **h_atom);
+long pop(s_atom **h_atom);
 s_atom* dup_top(s_atom *top);
 
 #endif

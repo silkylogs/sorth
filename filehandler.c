@@ -8,7 +8,7 @@ long total_line_numbers(const char *filename){
 	if(fp == NULL){
 		printf("filehandler.c: %s unable to be opened by ", filename);
 		printf("total_line_numbers()\n");
-		return NULL;
+		return -1;
 	}
 
 	char line[MAX_LINE_LENGTH];
