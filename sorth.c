@@ -16,7 +16,7 @@
 #include "filehandler.h"
 
 s_atom *globalstack = NULL;
-
+long eli = 0; /* Zero based executing line index */
 
 /* Returns the remainder of the command string which does not contain the instruction */
 char* get_arg_string(const char *cmd, int instlen){
@@ -78,6 +78,7 @@ void eval_command(const char *cmd){
 	}
 	else if(0 == strcmp(sorth_instruction_set[2], sorth_instruction_set[inst_index])){
 		printf("add found\n");
+		//sorth_add(); //warning: totally broken implementation
 	}
 	else if(0 == strcmp(sorth_instruction_set[3], sorth_instruction_set[inst_index])){
 		printf("ifeq found\n");
@@ -87,6 +88,12 @@ void eval_command(const char *cmd){
 	}
 	else if(0 == strcmp(sorth_instruction_set[5], sorth_instruction_set[inst_index])){
 		printf("dup found\n");
+	}
+	else if(0 == strcmp(sorth_instruction_set[6], sorth_instruction_set[inst_index])){
+		//printf("jump found\n");
+		char *arg_string = get_arg_string(cmd, strlen(sorth_instruction_set[inst_index]));
+		int arguement = atoi(arg_string);
+		sorth_jump(arguement);
 	}
 	else{
 		printf("sorth.c: eval_command() encountered an else condition in command evaluation\n");
@@ -119,9 +126,28 @@ s_atom** sorth_pop(s_atom **globalstack){
 	return sa;
 }
 
-void sorth_add(s_atom *globalstack){
-	;
-}
+/*
+void* sorth_add(){ //literally broken
+
+	if(globalstack == NULL){
+		printf("sorth_add(): encountered stack underflow while popping atom 1\n");
+		return NULL;
+	}
+
+	long v1 = globalstack->data;
+	globalstack = (s_atom*)delete_top(&globalstack);
+	printf("v1: %d\n", v1);
+
+	if(globalstack == NULL){
+		printf("sorth_add(): encountered stack underflow while popping atom 2\n");
+		return NULL;
+	}
+	
+	long v2 = pop(&globalstack);
+	printf("v1: %d\n", v1);
+	
+//	globalstack = insert(globalstack, v1 + v2);
+}*/
 
 void sorth_ifeq(){
 	;
@@ -135,6 +161,11 @@ void sorth_dup(){
 	;
 }
 
+void sorth_jump(int lineno){
+	/* 2 subtracted to convert line index to cardinal line number */
+	eli = lineno - 2;
+	return;
+}
 
 
 
@@ -150,11 +181,20 @@ int main(int argc, char *argv[]){
 	printf("number of lines in file: %d\n", linecount);
 
 	/* Main loop */
+
+	while(eli < total_line_numbers(argv[1])){
+		eval_command(filecontents[eli]);
+		printf("Contents of stack: ");
+		print_stack(globalstack);
+
+		eli++;
+	}
+	/*
 	for(long i = 0; i < total_line_numbers(argv[1]); i++){
 		eval_command(filecontents[i]);
 		printf("Contents of stack: ");
 		print_stack(globalstack);
-	}
+		}*/
 
 	
 

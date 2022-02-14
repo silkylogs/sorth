@@ -13,7 +13,7 @@
 /*/
 
 const char *sorth_instruction_set[] = {
-	"push", "pop", "add", "ifeq", "print", "dup"
+	"push", "pop", "add", "ifeq", "print", "dup", "jump"
 };
 
 
@@ -25,13 +25,14 @@ char* get_arg_string(const char *cmd, int instlen);
 
 void get_argument(const char *cmd);
 void eval_command(const char *cmd);
-//void eval_command(const char *cmd, s_atom *globalstack);
 s_atom* sorth_push(s_atom *globalstack, int number);
-//void sorth_pop(s_atom *globalstack);
 s_atom** sorth_pop(s_atom **globalstack);
-void sorth_add(s_atom *globalstack);
+//s_atom** sorth_add(s_atom **globalstack);
+void* sorth_add();
 void sorth_ifeq();
 void sorth_print();
 void sorth_dup();
+void sorth_jump(int lineno);
+
 
 #endif
