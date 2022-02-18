@@ -13,3 +13,5 @@ The language has a stack and 8 instructions:
 `print` print the value at the top of the stack  
 `printa` print the ascii equivalent of the value at the top of the stack  
 `dup` push a copy of what's at the top of the stack back onto the stack  
+
+Comments can be added via prepending the `#` symbol before a single line comment
