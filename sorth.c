@@ -50,15 +50,19 @@ void eval_command(const char *cmd){
 		}
 	}
 
-	/* Implement mechanism for dealing with syntax errors here */
+	/*
+	 * Implement mechanism for dealing with syntax errors here
+	 */
 	if(!correct_instruction_found){
 		printf("eval_command(): syntax error in line: %s", cmd);
 		return;
 	}
 
 	
-	/* Implement command evaluation here */
-	/* Design opportunity: either check for null pointer after stack operation, or not */
+	/* 
+	 * Implement command evaluation here
+	 */
+	/* push */
 	if(0 == strcmp(sorth_instruction_set[0], sorth_instruction_set[inst_index])){
 //		printf("push found\n");
 		char *arg_string = get_arg_string(cmd, strlen(sorth_instruction_set[inst_index]));
@@ -69,16 +73,48 @@ void eval_command(const char *cmd){
 		 * atoi() (or related area) is to blame
 		/*/
 		int arguement = atoi(arg_string);
-		printf("pushing %d into stack\n", arguement);
-		globalstack = sorth_push(globalstack, arguement);
+//		printf("pushing %d into stack\n", arguement);
+
+		globalstack = insert(globalstack, arguement);
+		if(globalstack == NULL){
+			printf("sorth.c: eval_command() is unable to push %d onto stack ", arguement);
+			printf("while evaluating command %s\n", cmd);
+			exit(1);
+		}
 	}
+	
+	/* pop */
 	else if(0 == strcmp(sorth_instruction_set[1], sorth_instruction_set[inst_index])){
-		//printf("pop found\n");
-		globalstack = (s_atom*)sorth_pop(&globalstack); //warning: barely working implementation
+//		printf("pop found\n");
+		globalstack = delete_top(&globalstack);
+		if(globalstack == NULL){
+			printf("sorth.c: eval_command() is unable to pop topmost element ");
+			printf("while evaluating command %s\n", cmd);
+			exit(1);
+		}
 	}
+
+	/* add */
 	else if(0 == strcmp(sorth_instruction_set[2], sorth_instruction_set[inst_index])){
-		printf("add found\n");
-		//sorth_add(); //warning: totally broken implementation
+//		printf("add found\n");
+
+		if(globalstack == NULL){
+			printf("sorth.c: stack underflow detected in function eval_command() ");
+			printf("while checking wether stack has enough elements in it ");
+			printf("while evaluating command %s\n", cmd);
+			exit(1);
+		}
+
+		int data1 = globalstack->data; globalstack = delete_top(&globalstack);
+
+		if(globalstack == NULL){
+			printf("sorth.c: stack underflow encountered in eval_command() ");
+			printf("while evaluating command %s\n", cmd);
+			exit(1);
+		}
+
+		int data2 = globalstack->data; globalstack = delete_top(&globalstack);
+		globalstack = insert(globalstack, data1+data2);
 	}
 	else if(0 == strcmp(sorth_instruction_set[3], sorth_instruction_set[inst_index])){
 		printf("ifeq found\n");
@@ -89,83 +125,22 @@ void eval_command(const char *cmd){
 	else if(0 == strcmp(sorth_instruction_set[5], sorth_instruction_set[inst_index])){
 		printf("dup found\n");
 	}
+
+	/* jump */
 	else if(0 == strcmp(sorth_instruction_set[6], sorth_instruction_set[inst_index])){
 		//printf("jump found\n");
 		char *arg_string = get_arg_string(cmd, strlen(sorth_instruction_set[inst_index]));
 		int arguement = atoi(arg_string);
-		sorth_jump(arguement);
+		eli = arguement - 2; /* 2 subtracted to convert arguement into cardinal line number */
 	}
 	else{
 		printf("sorth.c: eval_command() encountered an else condition in command evaluation\n");
 		return;
-	}
-	
+		//exit(1);
+	}	
 	return;
 }
 
-
-
-s_atom* sorth_push(s_atom *globalstack, const int number){
-	s_atom *output;
-	output = insert(globalstack, number);
-	if(output == NULL){
-		printf("sorth.c: sorth_push() is unable to push %d onto stack\n");
-		return NULL; /* Returning null as a means of error checking */
-	}
-	return output;
-}
-
-// modify return type for error chekcing
-s_atom** sorth_pop(s_atom **globalstack){
-	s_atom **sa = (s_atom**)delete_top(globalstack);
-       	if(sa == NULL){
-		printf("sorth.c: sorth_pop() is unable to pop topmost element ");
-		printf("(%d) from stack\n", (*globalstack)->data);
-		return NULL; /* Returning null as a means of error checking */
-	}
-	return sa;
-}
-
-/*
-void* sorth_add(){ //literally broken
-
-	if(globalstack == NULL){
-		printf("sorth_add(): encountered stack underflow while popping atom 1\n");
-		return NULL;
-	}
-
-	long v1 = globalstack->data;
-	globalstack = (s_atom*)delete_top(&globalstack);
-	printf("v1: %d\n", v1);
-
-	if(globalstack == NULL){
-		printf("sorth_add(): encountered stack underflow while popping atom 2\n");
-		return NULL;
-	}
-	
-	long v2 = pop(&globalstack);
-	printf("v1: %d\n", v1);
-	
-//	globalstack = insert(globalstack, v1 + v2);
-}*/
-
-void sorth_ifeq(){
-	;
-}
-
-void sorth_print(){
-	;
-}
-
-void sorth_dup(){
-	;
-}
-
-void sorth_jump(int lineno){
-	/* 2 subtracted to convert line index to cardinal line number */
-	eli = lineno - 2;
-	return;
-}
 
 
 

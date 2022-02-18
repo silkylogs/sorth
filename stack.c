@@ -60,8 +60,10 @@ s_atom* delete_top(s_atom **current){
  * Given a pointer to the pointer to the top of the stack,
  * returns its value, moves the input pointer to the next
  * element in the stack, and deletes the topmost atom
+ *
+ * potentially dangerous, use delete_top() instead
 */
-long pop(s_atom **h_atom){
+int pop(s_atom **h_atom){
 	if(*h_atom == NULL){
 		printf("stack.c: pop() attempted to pop null pointer. ");
 		printf("Perhaps there is nothing in the stack to pop?\n");
