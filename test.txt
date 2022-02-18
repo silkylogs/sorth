@@ -1,6 +1,8 @@
-push 1
-push 1
-push 3
-pop
-add
-jump 2
+# This code listing will loop through the entire thing five times and print the number zero
+# Also, since sorth detests blank lines, use the # symbol as whitespace instead
+#
+push 5		# Number of times to loop for
+push -1		# Subtraction
+add 
+ifeq 5		# Go to line number 5 if top of stack is not zero
+print
