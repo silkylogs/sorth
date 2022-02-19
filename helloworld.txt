@@ -1,0 +1,27 @@
+# Hello world program, in sorth
+
+# Pushing zero at first allows for loop to terminate
+push 0
+
+# " world![CRLF]"
+push 10
+push 13
+push 33
+push 100
+push 108
+push 114
+push 111
+push 119
+push 32
+
+# "Hello"
+push 111
+push 108
+push 108
+push 101
+push 72
+
+# loop, print characters until 0 encountered on top of stack
+printa
+pop
+ifeq 25

@@ -8,7 +8,6 @@
  * jump <lineno> # jump to a line number
  * print # print the value at the top of the stack
  * dup # push a copy of what's at the top of the stack back onto the stack.
- * # <comment> # self explanatory
  */
 
 #include <stdio.h>
@@ -38,8 +37,13 @@ char* get_arg_string(const char *cmd, int instlen){
 }
 
 void eval_command(const char *cmd){
-	printf("evaluating: %s", cmd);
+	//printf("evaluating: %s", cmd);
 	int correct_instruction_found = 0;
+
+	/* Making the program not throw errors upon encountering comment symbol or blank line */
+	if(cmd[0] == '#' || cmd[0] == '\n'){
+		return;
+	}
 	
 	/* Checking what command is used */
 	int inst_index = 0;
@@ -66,17 +70,13 @@ void eval_command(const char *cmd){
 
 	/* push */
 	if(0 == strcmp(sorth_instruction_set[0], sorth_instruction_set[inst_index])){
-//		printf("push found\n");
 		char *arg_string = get_arg_string(cmd, strlen(sorth_instruction_set[inst_index]));
-
 		/*/
 		 * In case stack seems to fill up with zeroes
 		 * when having non integral input,
 		 * atoi() (or related area) is to blame
 		/*/
 		int arguement = atoi(arg_string);
-//		printf("pushing %d into stack\n", arguement);
-
 		globalstack = insert(globalstack, arguement);
 		if(globalstack == NULL){
 			printf("sorth.c: eval_command() is unable to push %d onto stack ", arguement);
@@ -87,7 +87,6 @@ void eval_command(const char *cmd){
 	
 	/* pop */
 	else if(0 == strcmp(sorth_instruction_set[1], sorth_instruction_set[inst_index])){
-//		printf("pop found\n");
 		globalstack = delete_top(&globalstack);
 		if(globalstack == NULL){
 			printf("sorth.c: eval_command() is unable to pop topmost element ");
@@ -99,7 +98,6 @@ void eval_command(const char *cmd){
 
 	/* add */
 	else if(0 == strcmp(sorth_instruction_set[2], sorth_instruction_set[inst_index])){
-//		printf("add found\n");
 
 		if(globalstack == NULL){
 			printf("sorth.c: stack underflow detected in function eval_command() ");
@@ -123,7 +121,6 @@ void eval_command(const char *cmd){
 
 	/* ifeq */
 	else if(0 == strcmp(sorth_instruction_set[3], sorth_instruction_set[inst_index])){
-//		printf("ifeq found\n");
 		if(globalstack == NULL){
 			printf("stack.c: eval_command() found nothing in stack to compare ");
 			printf(WHILE_EVAL);
@@ -137,35 +134,31 @@ void eval_command(const char *cmd){
 		return;
 	}
 	
+	/* printa (print ascii)  */
 	else if(0 == strcmp(sorth_instruction_set[4], sorth_instruction_set[inst_index])){
-		printf("print found\n");
+		if(globalstack == NULL) {printf("0");}
+		else { printf("%c", (char)(globalstack->data)); }
 		return;
 	}
+
+	/* dup */
 	else if(0 == strcmp(sorth_instruction_set[5], sorth_instruction_set[inst_index])){
-		printf("dup found\n");
+		globalstack = dup_top(globalstack);
+		return;
 	}
 
 	/* jump */
 	else if(0 == strcmp(sorth_instruction_set[6], sorth_instruction_set[inst_index])){
-		//printf("jump found\n");
 		char *arg_string = get_arg_string(cmd, strlen(sorth_instruction_set[inst_index]));
 		int arguement = atoi(arg_string);
 		eli = arguement - 2; /* 2 subtracted to convert arguement into cardinal line number */
 		return;
 	}
 	
-	/* printa (print ascii) */
+	/* print */
 	else if(0 == strcmp(sorth_instruction_set[7], sorth_instruction_set[inst_index])){
-		//	if(globalstack == NULL) { printf("%c", (char)(globalstack->data)); } might segfault
-		return;
-	}
-	
-	/* # (comment symbol) */
-	else if(0 == strcmp(sorth_instruction_set[8], sorth_instruction_set[inst_index])){
-		/*
-		* Comments can either be as a new line on itself,
-		* or on the immediate right of the line, followed by a space
-		*/
+		if(globalstack == NULL) {printf("0");}
+		else { printf("%d", globalstack->data); }
 		return;
 	}
 	
@@ -174,7 +167,7 @@ void eval_command(const char *cmd){
 		printf(WHILE_EVAL);
 		return;
 		//exit(1);
-	}	
+	}
 	return;
 }
 
@@ -184,18 +177,22 @@ void eval_command(const char *cmd){
 
 
 int main(int argc, char *argv[]){
-	printf("Starting sorth interpreter\n");
+	//printf("Starting sorth interpreter\n");
+	if(argc != 2){
+		printf("Invalid number of arguements\n");
+		printf("Usage: sorth <filename>\n");
+	}
 	
 	char **filecontents = extract_to_string_array(argv[1]);
 	int linecount = total_line_numbers("test.txt");
 
-	printf("number of lines in file: %d\n", linecount);
+	//printf("number of lines in file: %d\n", linecount);
 
 	/* Main loop */
 	while(eli < total_line_numbers(argv[1])){
 		eval_command(filecontents[eli]);
-		printf("Contents of stack: ");
-		print_stack(globalstack);
+	//	printf("Contents of stack: ");
+	//	print_stack(globalstack);
 
 		eli++;
 	}

@@ -13,13 +13,11 @@
 /*/
 
 const char *sorth_instruction_set[] = {
-	"push", "pop", "add", "ifeq", "print", "dup", "jump",
-	"printa", "#"
+	"push", "pop", "add", "ifeq", "printa", "dup", "jump",
+	"print"
 };
 
 
-
-#define SORTH_PROMPT "$ "
 #define SORTH_INSTRUCTION_COUNT sizeof(sorth_instruction_set)/sizeof(sorth_instruction_set[0])
 #define WHILE_EVAL ("while evaluating command \"%s\", line %d\n", cmd, eli)
 

@@ -1,6 +1,6 @@
 # Sorth
 Sorth is an interpreted, stack based, typeless language implemented from a [stackoverflow answer](https://stackoverflow.com/questions/6887471/how-would-i-go-about-writing-an-interpreter-in-c), alongside some extra features  
-Current status: `development in progress`
+Current status: `Released!`
 
 
 ## Syntax
@@ -14,4 +14,5 @@ The language has a stack and 8 instructions:
 `printa` print the ascii equivalent of the value at the top of the stack  
 `dup` push a copy of what's at the top of the stack back onto the stack  
 
-Comments can be added via prepending the `#` symbol before a single line comment
+Comments can be added by prepending the comment with the `#` symbol.  
+Comments, however, cannot be beside a instruction.
