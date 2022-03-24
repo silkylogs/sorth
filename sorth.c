@@ -184,7 +184,7 @@ int main(int argc, char *argv[]){
 	}
 	
 	char **filecontents = extract_to_string_array(argv[1]);
-	int linecount = total_line_numbers("test.txt");
+	int linecount = total_line_numbers(argv[1]);
 
 	//printf("number of lines in file: %d\n", linecount);
 
